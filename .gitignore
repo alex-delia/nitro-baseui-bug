@@ -16,6 +16,9 @@ coverage
 # Turbo
 .turbo
 
+# pnpm
+.pnpm-store
+
 # Vercel
 .vercel
 

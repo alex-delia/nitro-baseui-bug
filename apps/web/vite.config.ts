@@ -1,20 +1,29 @@
-import { defineConfig } from "vite"
-import { tanstackStart } from "@tanstack/react-start/plugin/vite"
-import viteReact from "@vitejs/plugin-react"
-import viteTsConfigPaths from "vite-tsconfig-paths"
 import tailwindcss from "@tailwindcss/vite"
+import { tanstackStart } from "@tanstack/react-start/plugin/vite"
+// import { tanstackRouter } from '@tanstack/router-plugin/vite';
+import babel from "@rolldown/plugin-babel"
+// import { devtools } from '@tanstack/devtools-vite';
+import react, { reactCompilerPreset } from "@vitejs/plugin-react"
 import { nitro } from "nitro/vite"
+import { defineConfig } from "vite"
 
-const config = defineConfig({
+// https://vitejs.dev/config/
+export default defineConfig({
   plugins: [
-    nitro(),
-    viteTsConfigPaths({
-      projects: ["./tsconfig.json"],
+    // tanstackRouter({ autoCodeSplitting: true, target: 'react' }),
+    // devtools(),
+
+    tanstackStart(),
+    // Nitro before TanStack Start matches Nitro + TSR docs and keeps SSR chunk graph stable.
+    nitro({preset: 'bun'}),
+    react(),
+    babel({
+      presets: [reactCompilerPreset()],
     }),
     tailwindcss(),
-    tanstackStart(),
-    viteReact(),
   ],
+  resolve: {
+    tsconfigPaths: true,
+    dedupe: ["react", "react-dom"],
+  },
 })
-
-export default config
